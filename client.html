@@ -1,0 +1,96 @@
+<!doctype html>
+<html class="animate">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+<title>Example mobile app</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+h1, h2, ul, ol table {
+	margin: 0 0 15px;
+}
+ul {
+	padding-left: 20px;
+}
+section.page {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 30px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.animate section.page {
+	-webkit-transition: left 500ms ease-out;
+}
+</style>
+</head>
+
+<body>
+
+<section id="page-1" class="page" style="left: 0; background-color: green;">
+	<h1>Index</h1>
+	<ul>
+		<li><a href="#" data-goto="2">Go to page 2</a></li>
+		<li><a href="#" data-goto="3">Go to page 3</a></li>
+	</ul>
+</section>
+
+<section id="page-2" class="page" style="left: 100%; background-color: red;">
+	<h1>Page two</h1>
+	<ul>
+		<li><a href="#" data-goto="1">Go to page 1</a></li>
+		<li><a href="#" data-goto="3">Go to page 3</a></li>
+	</ul>
+</section>
+
+<section id="page-3" class="page" style="left: 200%; background-color: blue;">
+	<h1>Page 3</h1>
+	<ul>
+		<li><a href="#" data-goto="1">Go to page 1</a></li>
+		<li><a href="#" data-goto="2">Go to page 2</a></li>
+	</ul>
+</section>
+
+<script>
+nav = {
+	page: 1,
+	back: function() {
+		if ( this.page > 1 ) {
+			return this.goto(this.page-1)
+		}
+	},
+	goto: function(page) {
+		var pages = document.querySelectorAll('section.page'), L = pages.length, offset = 100*(1-page)
+		for ( var i=0; i<L; i++ ) {
+			pages[i].style.left = (i*100 + offset) + '%'
+		}
+		return this.page = page
+	},
+	links: function() {
+		var links = document.querySelectorAll('a[data-goto]:not(.linked)'), L = links.length
+		for ( var i=0; i<L; i++ ) {
+			links[i].addEventListener('click', function(e) {
+				e.preventDefault()
+				nav.goto(~~this.dataset.goto)
+			}, false)
+			links[i].classList.add('linked')
+			//delete links[i].dataset.goto
+		}
+	}
+}
+nav.links()
+</script>
+</body>
+
+</html>
